@@ -1,0 +1,48 @@
+可视化轻量级数据储存分配处理器 Lightweight data distribution processor 
+
+【工作者数据提交端(用户端)】
+
+1.申请KEY (生成UserId) / id：99899  key：a9cfebcdb4e20ed975e82b7fd877693f points：10   @增加安全性 开放性 省略注册等方式
+
+2.提交变量/ key：a9cfebcdb4e20ed975e82b7fd877693f value：cookies=123456 tasktype：888 @tasktype是任务标识方便扣除点数
+-返回信息/state：processing(success/fail) st：2022/12/31/9:02:33 id：99899 order：8875266319 
+
+@变量类型可拓展[@轻量级暂不考虑](
+                       1.jpg,png.        参考图床：https://juejin.cn/post/6986865512257388552  https://www.imgtp.com/index/api.html
+                       2.txt,word,text 参考在线剪贴板：https://netcut.cn/
+                       3.all 多文件      参考we或蓝奏云(用户端文件合法合规)：https://wetransfer.com/ 
+
+3.获取任务订单状态/order：8875266319 key：a9cfebcdb4e20ed975e82b7fd877693f                  @需要设置查询间隔，防止DOS
+-返回信息/state：processing(success/fail) st：2022/12/31/9:02:33 id：99899 order：8875266319 
+
+4.停止任务订单/type:stop order：8875266319 key：a9cfebcdb4e20ed975e82b7fd877693f  
+-返回信息/state：fail(success/processing) st：2022/12/31/9:02:33 id：99899 order：8875266319 
+
+【数据储存与分配(平台端)】
+
+1.接受数据：
+received{key：a9cfebcdb4e20ed975e82b7fd877693f value：cookies=123456 tasktype：888}
+   1.判断任务类型/tasktype：888    return：success,false
+   2.创建任务订单/ order：8875266319 value：cookies=123456  tasktype：888 key：a9cfebcdb4e20ed975e82b7fd877693f  @可设置收取gas******传输燃料费
+   3.预先扣除所需点数/points：10 
+   4.加入待处理任务队列/state：processing
+
+2.接受状态：
+received{order：8875266319 taskstate：success(fail) points：10 remark：任务执行失败，原因... }  @points是退还点数
+分析任务订单/order：8875266319
+返还任务点数/points：10
+更新任务状态/state：fail(success faile)  remark：任务执行失败，原因...  
+
+
+【第三方数据处理开放api(处理端)】
+
+1.获取 所有任务类型/getasktype/
+-返回信息/state：success(success/fail) {tasktype：888 points：10,tasktype：999 points：20,...}
+
+2.获取 任务类型888的待处理任务/getask/ tasktype：888
+-返回信息/state：success(success/fail) tasktype: 888{1.[taskid: 99899 st：2022/12/31/9:02:33 order：8875266319 value：cookies=123456] 2.[...]}
+
+3.提交 任务处理结果/post result/ order：8875266319 taskstate：success(fail) points：10 remark：任务执行失败，原因...   @points是退还点数
+-返回信息/state：success(success/fail) order：8875266319 st：2022/12/31/9:05:52
+
+
