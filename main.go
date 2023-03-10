@@ -1,9 +1,17 @@
 package main
 
 import (
+	"LDDP/server"
+	"LDDP/server/cron"
+	"LDDP/server/dao"
+	"LDDP/server/gcache"
 	"LDDP/server/settings"
+	"LDDP/utils/logger"
+	"LDDP/utils/snowflake"
+	"LDDP/utils/validator"
 	"context"
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 	"log"
@@ -43,6 +51,27 @@ func main() {
 		return
 	}
 	zap.L().Debug("Validator success init ...")
+
+	// 注册雪花ID算法
+	if err := snowflake.Init(); err != nil {
+		fmt.Printf("snowflake init failed, err:%v\n", err)
+		return
+	}
+	zap.L().Debug("Snowflake success init ...")
+
+	// 启动定时服务
+	if err := cron.Task(); err != nil {
+		fmt.Printf("Cron init failed, err:%v\n", err)
+		return
+	}
+	zap.L().Debug("Cron success init ...")
+
+	// 注册缓存
+	gcache.InitCache()
+	zap.L().Debug("Gcache success init ...")
+
+	// 检查授权
+	cron.CheckVersion()
 
 	// 配置运行模式
 	if viper.GetString("app.mode") == "debug" {

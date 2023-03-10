@@ -3,17 +3,3 @@ app:
   mode: "debug"
   # 运行端口
   port: 1449
-
-email:
-  # 发信邮箱
-  user: "17691377363@163.com"
-  # 发信邮箱密码
-  pass: "lcy136729880"
-  # 发信服务器
-  host: "smtp.163.com"
-  # 邮件端口
-  port: "465"
-  # 发件标题
-  title: "【LDDP - 业务邮件】"
-  # 发件人
-  sender: "【LDDP】"

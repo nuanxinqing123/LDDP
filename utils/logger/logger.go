@@ -1,6 +1,8 @@
 package logger
 
 import (
+	"github.com/gin-gonic/gin"
+	"github.com/natefinch/lumberjack"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -17,20 +19,20 @@ func Init() (err error) {
 	writeSyncer := getLogWriter(
 		"logs/LDDP_info.log",
 		100,
-		30,
-		15,
+		10,
+		60,
 	)
 	writeSyncerWarn := getLogWriter(
 		"logs/LDDP_warn.log",
 		20,
-		60,
-		30,
+		10,
+		90,
 	)
 	writeSyncerError := getLogWriter(
 		"logs/LDDP_error.log",
 		20,
-		90,
-		60,
+		10,
+		120,
 	)
 	encoder := getEncoder()
 	var l = new(zapcore.Level)
