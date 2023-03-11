@@ -5,6 +5,7 @@ cd ../..
 xgo -out LDDP-V1 --targets=linux/amd64,windows/amd64 ./
 
 # 打包订阅版
+cd server/const
 gsed -i '13s/const EmpowerVersion = "v1"/const EmpowerVersion = "v2"/' const.go
 cd ../..
 xgo -out LDDP-V2 --targets=linux/amd64,windows/amd64 ./
