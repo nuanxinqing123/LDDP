@@ -4,12 +4,10 @@ import (
 	"LDDP/server/dao"
 	"LDDP/server/model"
 	res "LDDP/utils/response"
-	"os"
-	"strconv"
-	"strings"
-
 	"github.com/segmentio/ksuid"
 	"go.uber.org/zap"
+	"os"
+	"strconv"
 )
 
 // TicketsDivisionData Tickets分页查询
@@ -48,19 +46,19 @@ func TicketsDivisionData(page string) (res.ResCode, model.TicketsPageData) {
 	pageData.PageData = data
 
 	// 数据模糊处理
-	for i := 0; i < len(pageData.PageData); i++ {
-		str := pageData.PageData[i].TicketsKey
-		s2 := strings.SplitAfter(str, "")
-		s2[4] = "*"
-		s2[5] = "*"
-		s2[6] = "*"
-		s2[7] = "*"
-		s2[8] = "*"
-		s2[9] = "*"
-		s2[10] = "*"
-		s2[11] = "*"
-		pageData.PageData[i].TicketsKey = strings.Join(s2, "")
-	}
+	//for i := 0; i < len(pageData.PageData); i++ {
+	//	str := pageData.PageData[i].TicketsKey
+	//	s2 := strings.SplitAfter(str, "")
+	//	s2[4] = "*"
+	//	s2[5] = "*"
+	//	s2[6] = "*"
+	//	s2[7] = "*"
+	//	s2[8] = "*"
+	//	s2[9] = "*"
+	//	s2[10] = "*"
+	//	s2[11] = "*"
+	//	pageData.PageData[i].TicketsKey = strings.Join(s2, "")
+	//}
 
 	return res.CodeSuccess, pageData
 }

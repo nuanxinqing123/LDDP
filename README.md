@@ -12,7 +12,7 @@ LDDP 是一个轻量级的任务处理框架，主要用于处理一些简单的
 * 支持任务的动态调度
 
 ### 3. 架构
-后端采用：Golang + GinFrame + SQLite 实现。
+后端采用：Golang + Gin + SQLite 实现。
 
 前端采用：Vue + Acer Pro 实现。
 
