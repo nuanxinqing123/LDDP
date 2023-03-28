@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"LDDP/server/dao"
 	"LDDP/server/logic"
 	"LDDP/server/model"
 	res "LDDP/utils/response"
@@ -26,13 +25,13 @@ func GetDivisionOrderData(c *gin.Context) {
 
 // GetOrderData 搜索订单
 func GetOrderData(c *gin.Context) {
-	var data []model.Order
 	// 查询搜索数据
+	tp := c.Query("type")
+	state := c.Query("state")
 	s := c.Query("s")
-	zap.L().Debug("【订单搜索】值：" + s)
-	data = dao.GetOrderData(s)
+	zap.L().Debug("【订单搜索】方法：" + tp + " 状态：" + state + " 值：" + s)
 
-	res.ResSuccess(c, data)
+	res.ResSuccess(c, logic.GetOrderData(tp, state, s))
 }
 
 // UserOrderData 订单数据

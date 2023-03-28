@@ -16,7 +16,9 @@ func Task() error {
 	// 定时任务区
 
 	// 每十分钟检查一次版本号
-	_, err = c.AddFunc("0/10 * * * ?", func() {
+	//_, err = c.AddFunc("0/10 * * * ?", func() {
+	// 每一小时检查一次版本号
+	_, err = c.AddFunc("15 * * * *", func() {
 		CheckVersion()
 	})
 

@@ -92,9 +92,9 @@ func UserGetDivisionOrderData(uid any, page string) (res.ResCode, model.OrderPag
 	// 查询总页数
 	count := dao.UserGetOrderDataPage(uid)
 	// 计算页数
-	z := count / 20
+	z := count / 40
 	var y int64
-	y = count % 20
+	y = count % 40
 
 	if y != 0 {
 		votePage.Page = z + 1
@@ -105,6 +105,31 @@ func UserGetDivisionOrderData(uid any, page string) (res.ResCode, model.OrderPag
 	votePage.PageData = data
 
 	return res.CodeSuccess, votePage
+}
+
+// GetOrderData 订单搜索
+func GetOrderData(tp, state, s string) []model.Order {
+	if tp == "订单类名" {
+		switch state {
+		case "等待中":
+			return dao.GetOrderTypeData(s, -1)
+		case "进行中":
+			return dao.GetOrderTypeData(s, 0)
+		case "已完成":
+			return dao.GetOrderTypeData(s, 1)
+		case "已终止":
+			return dao.GetOrderTypeData(s, 2)
+		case "退款中":
+			return dao.GetOrderTypeData(s, 3)
+		case "已退款":
+			return dao.GetOrderTypeData(s, 4)
+		}
+	} else if tp == "订单号" {
+		return dao.GetOrderData(s)
+	} else {
+		return dao.GetOrderTaskData(s)
+	}
+	return nil
 }
 
 // UserOrderRefund 订单退款
@@ -143,7 +168,7 @@ func StartVote(uid any, p *model.VoteOrder, IP string) (res.ResCode, string) {
 
 	// 判断任务范围
 	zap.L().Debug("任务票数：" + strconv.Itoa(p.OrderNumber))
-	if p.OrderNumber < 1 || p.OrderNumber > 9999 {
+	if p.OrderNumber < 1 || p.OrderNumber > 20000 {
 		return res.CodeVoteError, "任务票数不正确"
 	}
 

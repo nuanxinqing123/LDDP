@@ -40,9 +40,9 @@ func GetUserIDData(uid any) model.User {
 func InsertUser(user *model.User) (err error) {
 	err = DB.Create(&user).Error
 	if err != nil {
-		return
+		return err
 	}
-	return
+	return nil
 }
 
 // GetDivisionUserData 条件查询用户数据

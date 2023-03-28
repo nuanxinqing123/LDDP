@@ -27,6 +27,20 @@ func GetOrderData(s string) []model.Order {
 	return v
 }
 
+// GetOrderTaskData 任务变量搜索订单
+func GetOrderTaskData(s string) []model.Order {
+	var v []model.Order
+	DB.Where("order_variable LIKE ?", "%"+s+"%").Find(&v)
+	return v
+}
+
+// GetOrderTypeData 订单类名&状态搜索订单
+func GetOrderTypeData(t string, s int) []model.Order {
+	var v []model.Order
+	DB.Where("order_task_type LIKE ? AND order_state = ?", "%"+t+"%", s).Find(&v)
+	return v
+}
+
 // UserGetDivisionOrderDataAll 条件查询Order数据
 func UserGetDivisionOrderDataAll(uid any, page int) []model.Order {
 	var v []model.Order

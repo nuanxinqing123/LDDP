@@ -2,15 +2,16 @@ package dao
 
 import (
 	"LDDP/server/model"
+	"log"
+	"math/rand"
+	"os"
+	"time"
+
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
-	"log"
-	"math/rand"
-	"os"
-	"time"
 )
 
 var DB *gorm.DB

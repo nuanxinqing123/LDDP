@@ -3,9 +3,10 @@ package jwt
 import (
 	"LDDP/server/dao"
 	"errors"
+	"time"
+
 	"github.com/golang-jwt/jwt"
 	"go.uber.org/zap"
-	"time"
 )
 
 // TokenExpireDuration Token过期时间

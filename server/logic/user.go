@@ -10,13 +10,14 @@ import (
 	"LDDP/utils/requests"
 	res "LDDP/utils/response"
 	"LDDP/utils/snowflake"
-	jsoniter "github.com/json-iterator/go"
-	"github.com/mojocn/base64Captcha"
-	"go.uber.org/zap"
 	"image/color"
 	"math/rand"
 	"strconv"
 	"time"
+
+	jsoniter "github.com/json-iterator/go"
+	"github.com/mojocn/base64Captcha"
+	"go.uber.org/zap"
 )
 
 // 设置自带的store
@@ -633,6 +634,6 @@ func GetUserOneData(uid any) (res.ResCode, *model.UserData) {
 }
 
 // UserLogout 退出登录
-func UserLogout(uid any) res.ResCode {
+func UserLogout() res.ResCode {
 	return res.CodeSuccess
 }
