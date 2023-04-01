@@ -24,7 +24,7 @@ func BotUserDR(p *model.DeductionRefund) (res.ResCode, string) {
 	// 查询订单
 	order := dao.GetOneOrderData(p.OrderID)
 	if order.OrderID == "" {
-		return res.CodeBotError, "查询订单不存在"
+		return res.CodeBotError, "操作订单不存在"
 	}
 
 	// 查询用户数据

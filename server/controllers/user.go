@@ -389,8 +389,7 @@ func GetUserOneData(c *gin.Context) {
 // UserLogout 退出登录
 func UserLogout(c *gin.Context) {
 	// 处理业务
-	UID, _ := c.Get(CtxUserKey)
-	resCode := logic.UserLogout(UID)
+	resCode := logic.UserLogout()
 	switch resCode {
 	case res.CodeSuccess:
 		// 更新成功

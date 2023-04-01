@@ -14,6 +14,7 @@ type User struct {
 	Email   string `json:"email,omitempty"`    // 用户邮箱
 	UserKey string `json:"user_key,omitempty"` // 用户Key
 	Points  int64  `json:"points"`             // 用户点券
+	Remarks string `json:"remarks,omitempty"`  // 用户备注
 	Role    string `json:"role"`               // 用户权限（user：用户、admin：管理员、proxy：代理）
 	IsState bool   `json:"is_state"`           // 用户状态（true：启用、false：封禁）
 	LoginIP string `json:"login_ip"`           // 上次登录IP
@@ -113,6 +114,7 @@ type UpdateUserData struct {
 	Email   string `json:"email" binding:"required"` // 用户邮箱
 	Points  int64  `json:"points"`                   // 用户点券
 	Role    string `json:"role"`                     // 角色身份
+	Remarks string `json:"remarks"`                  // 用户备注
 	IsState bool   `json:"is_state"`                 // 用户状态（true：启用、false：封禁）
 }
 

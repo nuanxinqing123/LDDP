@@ -79,6 +79,7 @@ func UserInformationUpdate(p *model.UpdateUserData) {
 	user.Email = p.Email
 	user.Points = p.Points
 	user.Role = p.Role
+	user.Remarks = p.Remarks
 	user.IsState = p.IsState
 	DB.Save(&user)
 }

@@ -92,9 +92,9 @@ func UserGetDivisionOrderData(uid any, page string) (res.ResCode, model.OrderPag
 	// 查询总页数
 	count := dao.UserGetOrderDataPage(uid)
 	// 计算页数
-	z := count / 40
+	z := count / 100
 	var y int64
-	y = count % 40
+	y = count % 100
 
 	if y != 0 {
 		votePage.Page = z + 1
@@ -168,7 +168,7 @@ func StartVote(uid any, p *model.VoteOrder, IP string) (res.ResCode, string) {
 
 	// 判断任务范围
 	zap.L().Debug("任务票数：" + strconv.Itoa(p.OrderNumber))
-	if p.OrderNumber < 1 || p.OrderNumber > 20000 {
+	if p.OrderNumber < 1 || p.OrderNumber > 50000 {
 		return res.CodeVoteError, "任务票数不正确"
 	}
 

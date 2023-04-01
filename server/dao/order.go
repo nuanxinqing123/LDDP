@@ -45,9 +45,9 @@ func GetOrderTypeData(t string, s int) []model.Order {
 func UserGetDivisionOrderDataAll(uid any, page int) []model.Order {
 	var v []model.Order
 	if page == 1 {
-		DB.Where("order_uid = ?", uid).Order("id desc").Limit(20).Offset(0).Find(&v)
+		DB.Where("order_uid = ?", uid).Order("id desc").Limit(100).Offset(0).Find(&v)
 	} else {
-		DB.Where("order_uid = ?", uid).Order("id desc").Limit(20).Offset((page - 1) * 20).Find(&v)
+		DB.Where("order_uid = ?", uid).Order("id desc").Limit(100).Offset((page - 1) * 100).Find(&v)
 	}
 
 	return v
