@@ -9,6 +9,7 @@ import (
 	"LDDP/utils/snowflake"
 	"go.uber.org/zap"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -160,6 +161,11 @@ func StartVote(uid any, p *model.VoteOrder, IP string) (res.ResCode, string) {
 		return res.CodeVoteError, "系统正在维护，暂时无法下单..."
 	}
 
+	// 判断是否为发起任务（批量）
+	if p.OrderModel != "single" {
+		return StartVoteBatch(uid, p, IP)
+	}
+
 	// 查询项目是否存在
 	prData := dao.ProjectSearchOneTrue(p.OrderTaskType)
 	if prData.ProjectType == "" {
@@ -168,8 +174,10 @@ func StartVote(uid any, p *model.VoteOrder, IP string) (res.ResCode, string) {
 
 	// 判断任务范围
 	zap.L().Debug("任务票数：" + strconv.Itoa(p.OrderNumber))
-	if p.OrderNumber < 1 || p.OrderNumber > 50000 {
-		return res.CodeVoteError, "任务票数不正确"
+	if p.OrderModel == "single" {
+		if p.OrderNumber < 1 || p.OrderNumber > 50000 {
+			return res.CodeVoteError, "任务票数不正确"
+		}
 	}
 
 	// 获取用户信息
@@ -229,6 +237,107 @@ func StartVote(uid any, p *model.VoteOrder, IP string) (res.ResCode, string) {
 			SendOrderRequest(vote, fd.ForwardAddress, 0)
 		}
 	}()
+
+	return res.CodeSuccess, "订单创建成功"
+}
+
+// StartVoteBatch 发起任务（批量）
+func StartVoteBatch(uid any, p *model.VoteOrder, IP string) (res.ResCode, string) {
+	// 查询项目是否存在
+	prData := dao.ProjectSearchOneTrue(p.OrderTaskType)
+	if prData.ProjectType == "" {
+		return res.CodeVoteError, "项目不存在"
+	}
+
+	// 根据字符串中的&符号分割
+	orderList := strings.Split(p.OrderVariable, "&")
+
+	// 获取用户信息
+	userData := dao.GetUserIDData(uid)
+
+	// 效验IP下单地址
+	data, _ := dao.GetSetting("check_ip")
+	if data.Value == "1" {
+		if !ip.CheckIf(userData.LoginIP, IP) {
+			return res.CodeVoteError, "安全警告：账号环境异常，禁止下单"
+		}
+	}
+
+	// 任务数量
+	var orderNumber int
+
+	// 检查任务票数
+	for i, o := range orderList {
+		// 根据字符串中的@符号分割
+		order := strings.Split(o, "@")
+
+		// 字符串转数字
+		num, err := strconv.Atoi(order[1])
+		if err != nil {
+			return res.CodeVoteError, "第" + strconv.Itoa(i+1) + "条任务票数不正确"
+		}
+		// 判断任务范围
+		if num < 1 || num > 50000 {
+			return res.CodeVoteError, "第" + strconv.Itoa(i+1) + "条任务票数不正确"
+		}
+		orderNumber += num
+	}
+
+	// 判断用户点券是否足够此任务
+	if userData.Points < int64(prData.ProjectPrice*orderNumber) {
+		return res.CodeVoteError, "余额不足"
+	}
+
+	// 用户预扣费
+	zap.L().Debug("用户预扣费前：" + strconv.FormatInt(userData.Points, 10))
+	userData.Points -= int64(prData.ProjectPrice * orderNumber)
+	// 保存数据
+	dao.UpdateUser(userData)
+	zap.L().Debug("用户预扣费后：" + strconv.FormatInt(userData.Points, 10))
+
+	// 下单
+	for _, o := range orderList {
+		// 根据字符串中的@符号分割
+		order := strings.Split(o, "@")
+
+		// 字符串转数字
+		num, _ := strconv.Atoi(order[1])
+
+		vote := &model.Order{
+			OrderTaskType:    p.OrderTaskType,
+			OrderID:          strconv.FormatInt(snowflake.GenID(), 10),
+			OrderUID:         userData.UserID,
+			OrderTickets:     int64(prData.ProjectPrice * num),
+			OrderNumber:      num,
+			OrderVariable:    order[0],
+			OrderRemarks:     p.OrderRemarks,
+			OrderState:       -1,
+			OrderStateReason: "",
+			OrderIP:          IP,
+		}
+
+		// 订单储存进数据库
+		dao.CreateOrder(vote)
+		zap.L().Debug("StartVote 订单储存进数据库")
+
+		// 记录积分变动
+		uroc := &model.UserRecordsOfConsumption{
+			UserID:      userData.UserID,
+			VoteOrder:   vote.OrderID,
+			TaskState:   "消费",
+			VoteTickets: int64(prData.ProjectPrice * num),
+		}
+		go dao.CreateConsumption(uroc)
+
+		// 发送订单请求
+		go func() {
+			// 查询订单转发地址
+			fd := dao.GetForwardByID(prData.ProjectAPI)
+			if fd.ForwardAddress != "" {
+				SendOrderRequest(vote, fd.ForwardAddress, 0)
+			}
+		}()
+	}
 
 	return res.CodeSuccess, "订单创建成功"
 }

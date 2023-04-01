@@ -1,1 +1,0 @@
-import{e as a,c as e}from"./arco.6fa229d2.js";import{i as o}from"./index.ca0933e3.js";function t(e=!1){const o=a(e);return{loading:o,setLoading:a=>{o.value=a},toggle:()=>{o.value=!o.value}}}function n(a){const t=o(),n=e((()=>"dark"===t.theme));return{chartOption:e((()=>a(n.value)))}}export{n as a,t as u};

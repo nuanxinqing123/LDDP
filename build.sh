@@ -1,3 +1,8 @@
+# 编译前端文件
+cd static
+go-bindata -o=bindata/bindata.go -pkg=bindata ./assets/...
+cd ..
+
 # 打包普通版
 cd server/const
 gsed -i '13s/const EmpowerVersion = "v2"/const EmpowerVersion = "v1"/' const.go

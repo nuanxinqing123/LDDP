@@ -7,7 +7,7 @@ var (
 )
 
 // LocVersion 本地版本
-const LocVersion = "1.0"
+const LocVersion = "1.1"
 
 // EmpowerVersion 授权版本「v1：普通版、v2：订阅版」
 const EmpowerVersion = "v2"

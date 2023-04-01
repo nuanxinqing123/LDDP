@@ -39,8 +39,9 @@ type OrderData struct {
 // VoteOrder 任务订单
 type VoteOrder struct {
 	OrderTaskType string `json:"task_type" binding:"required"` // 任务类名
-	OrderVariable string `json:"variable" binding:"required"`  // 任务变量
-	OrderNumber   int    `json:"number" binding:"required"`    // 任务数量
+	OrderModel    string `json:"model" binding:"required"`     // 任务模型（单个：single、多个：multiple）
+	OrderVariable string `json:"variableB" binding:"required"` // 任务变量
+	OrderNumber   int    `json:"number"`                       // 任务数量
 	OrderRemarks  string `json:"remarks"`                      // 订单备注
 }
 

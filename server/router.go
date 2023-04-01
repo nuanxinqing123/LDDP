@@ -155,8 +155,6 @@ func Setup() *gin.Engine {
 				admin.GET("user/search", controllers.UserSearch)
 				// 修改
 				admin.PUT("user/information/update", controllers.UserInformationUpdate)
-				// 删除
-				//admin.DELETE("user/information/delete", controllers.UserInformationDelete)
 			}
 
 			// 点券
