@@ -250,7 +250,7 @@ func StartVoteBatch(uid any, p *model.VoteOrder, IP string) (res.ResCode, string
 	}
 
 	// 根据字符串中的&符号分割
-	orderList := strings.Split(p.OrderVariable, "&")
+	orderList := strings.Split(p.OrderVariable, "<&>")
 
 	// 获取用户信息
 	userData := dao.GetUserIDData(uid)
@@ -268,8 +268,8 @@ func StartVoteBatch(uid any, p *model.VoteOrder, IP string) (res.ResCode, string
 
 	// 检查任务票数
 	for i, o := range orderList {
-		// 根据字符串中的@符号分割
-		order := strings.Split(o, "@")
+		// 根据字符串中的----符号分割
+		order := strings.Split(o, "----")
 
 		// 字符串转数字
 		num, err := strconv.Atoi(order[1])
