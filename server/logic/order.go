@@ -298,7 +298,7 @@ func StartVoteBatch(uid any, p *model.VoteOrder, IP string) (res.ResCode, string
 	// 下单
 	for _, o := range orderList {
 		// 根据字符串中的@符号分割
-		order := strings.Split(o, "@")
+		order := strings.Split(o, "----")
 
 		// 字符串转数字
 		num, _ := strconv.Atoi(order[1])
@@ -349,20 +349,24 @@ func SendOrderRequest(so *model.Order, url string, num int) {
 	if err != nil {
 		zap.L().Error("发送订单请求失败：" + err.Error())
 		OrderDelayPush(so, url, num+1)
+		return
 	}
 	// 发送请求
 	result, err := requests.Requests("POST", url, string(sso), "")
 	if err != nil {
 		OrderDelayPush(so, url, num+1)
+		return
 	} else {
 		// 解析返回数据
 		var sor Result
 		err = json.Unmarshal(result, &sor)
 		if err != nil {
 			OrderDelayPush(so, url, num+1)
+			return
 		} else {
 			if sor.Code != 2000 {
 				OrderDelayPush(so, url, num+1)
+				return
 			}
 		}
 	}
@@ -375,20 +379,24 @@ func SendOrderRefundRequest(rf SOrderRF, url string, num int) {
 	if err != nil {
 		zap.L().Error("发送订单请求失败：" + err.Error())
 		OrderRefundDelayPush(rf, url, num+1)
+		return
 	}
 	// 发送请求
 	result, err := requests.Requests("POST", url, string(sorf), "")
 	if err != nil {
 		OrderRefundDelayPush(rf, url, num+1)
+		return
 	} else {
 		// 解析返回数据
 		var sor Result
 		err = json.Unmarshal(result, &sor)
 		if err != nil {
 			OrderRefundDelayPush(rf, url, num+1)
+			return
 		} else {
 			if sor.Code != 2000 {
 				OrderRefundDelayPush(rf, url, num+1)
+				return
 			}
 		}
 	}
@@ -396,7 +404,7 @@ func SendOrderRefundRequest(rf SOrderRF, url string, num int) {
 
 // OrderDelayPush 订单延迟推送
 func OrderDelayPush(so *model.Order, url string, num int) {
-	if num <= 5 {
+	if num < 5 {
 		// 重试次数小于5次
 		time.Sleep(time.Minute * 3)
 		SendOrderRequest(so, url, num+1)
@@ -430,7 +438,7 @@ func OrderDelayPush(so *model.Order, url string, num int) {
 
 // OrderRefundDelayPush 退款订单延迟推送
 func OrderRefundDelayPush(rf SOrderRF, url string, num int) {
-	if num <= 5 {
+	if num < 5 {
 		// 重试次数小于5次
 		time.Sleep(time.Minute * 3)
 		SendOrderRefundRequest(rf, url, num+1)
