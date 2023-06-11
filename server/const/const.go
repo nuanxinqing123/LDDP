@@ -1,9 +1,8 @@
 package _const
 
-// LicenseDate 全局变量
+// LicenseState 全局变量
 var (
-	LicenseDate  int64 // 授权到期时间
-	LicenseState bool  // 授权权限
+	LicenseState bool // 授权权限
 )
 
 // LocVersion 本地版本

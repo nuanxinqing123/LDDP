@@ -2,6 +2,7 @@ package main
 
 import (
 	"LDDP/server"
+	_const "LDDP/server/const"
 	"LDDP/server/cron"
 	"LDDP/server/dao"
 	"LDDP/server/gcache"
@@ -11,9 +12,6 @@ import (
 	"LDDP/utils/validator"
 	"context"
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"github.com/spf13/viper"
-	"go.uber.org/zap"
 	"log"
 	"net/http"
 	"os"
@@ -21,6 +19,10 @@ import (
 	"strconv"
 	"syscall"
 	"time"
+
+	"github.com/gin-gonic/gin"
+	"github.com/spf13/viper"
+	"go.uber.org/zap"
 )
 
 func main() {
@@ -70,8 +72,7 @@ func main() {
 	gcache.InitCache()
 	zap.L().Debug("Gcache success init ...")
 
-	// 检查授权
-	cron.CheckVersion()
+	_const.LicenseState = true
 
 	// 配置运行模式
 	if viper.GetString("app.mode") == "debug" {
@@ -116,7 +117,7 @@ func main() {
 	// 创建五秒超时的Context
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	// 五秒内优雅关闭服务（将未处理完成的请求处理完再关闭服务），超过十秒就超时退出
+	// 十秒内优雅关闭服务（将未处理完成的请求处理完再关闭服务），超过十秒就超时退出
 	if err := srv.Shutdown(ctx); err != nil {
 		zap.L().Fatal("Service timed out has been shut down：", zap.Error(err))
 	}

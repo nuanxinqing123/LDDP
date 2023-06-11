@@ -13,17 +13,9 @@ func Task() error {
 	// 刷新并启用启动任务
 	c = cron.New(cron.WithLocation(time.FixedZone("CST", 8*3600))) // 设置时区
 
-	// 定时任务区
-
-	// 每十分钟检查一次版本号
-	//_, err = c.AddFunc("0/10 * * * ?", func() {
-	// 每一小时检查一次版本号
-	_, err = c.AddFunc("15 * * * *", func() {
-		CheckVersion()
-	})
+	// 定时任务区域
 
 	// 定时任务结束
-
 	if err != nil {
 		return err
 	}
