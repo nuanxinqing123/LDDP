@@ -3,3 +3,14 @@ app:
   mode: "debug"
   # 运行端口
   port: 1449
+
+# 邮箱
+email:
+  # 地址
+  host: "smtpdm.aliyun.com"
+  # 端口
+  port: "465"
+  # 用户名
+  user: ""
+  # 密码
+  pass: ""

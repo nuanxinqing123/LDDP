@@ -31,7 +31,7 @@ func Setup() *gin.Engine {
 		}
 
 		// 检查授权
-		r.Use(middlewares.LicenseCheck())
+		//r.Use(middlewares.LicenseCheck())
 	}
 
 	// 前端静态文件

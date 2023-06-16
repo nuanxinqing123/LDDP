@@ -3,6 +3,7 @@
 package email
 
 import (
+	"github.com/spf13/viper"
 	"go.uber.org/zap"
 	"gopkg.in/gomail.v2"
 	"regexp"
@@ -35,10 +36,10 @@ func SendEmailCode(Title, UserEmail, Content string) error {
 func SendMail(mailTo []string, subject, body string) error {
 	//定义邮箱服务器连接信息，如果是网易邮箱 pass填密码，qq邮箱填授权码
 	mailConn := map[string]string{
-		"user": "system@yurenxianbao.com",
-		"pass": "Ox1IWi9Fc4NRZqSrOB",
-		"host": "smtpdm.aliyun.com",
-		"port": "465",
+		"user": viper.GetString("email.user"),
+		"pass": viper.GetString("email.pass"),
+		"host": viper.GetString("email.host"),
+		"port": viper.GetString("email.port"),
 	}
 
 	port, _ := strconv.Atoi(mailConn["port"]) //转换端口类型为int
