@@ -1,16 +1,8 @@
 package main
 
 import (
-	"LDDP/server"
-	_const "LDDP/server/const"
-	"LDDP/server/cron"
-	"LDDP/server/dao"
-	"LDDP/server/gcache"
-	"LDDP/server/settings"
-	"LDDP/utils/logger"
-	"LDDP/utils/snowflake"
-	"LDDP/utils/validator"
 	"context"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -19,6 +11,15 @@ import (
 	"strconv"
 	"syscall"
 	"time"
+
+	"LDDP/server"
+	"LDDP/server/cron"
+	"LDDP/server/dao"
+	"LDDP/server/gcache"
+	"LDDP/server/settings"
+	"LDDP/utils/logger"
+	"LDDP/utils/snowflake"
+	"LDDP/utils/validator"
 
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
@@ -72,8 +73,6 @@ func main() {
 	gcache.InitCache()
 	zap.L().Debug("Gcache success init ...")
 
-	_const.LicenseState = true
-
 	// 配置运行模式
 	if viper.GetString("app.mode") == "debug" {
 		gin.SetMode(gin.DebugMode)
@@ -102,7 +101,7 @@ func main() {
 
 	// 启动
 	go func() {
-		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+		if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 			log.Fatalf("Listten: %s\n", err)
 		}
 	}()

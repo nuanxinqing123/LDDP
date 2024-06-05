@@ -1,13 +1,14 @@
 package server
 
 import (
+	"html/template"
+	"strings"
+	"time"
+
 	"LDDP/server/controllers"
 	"LDDP/server/middlewares"
 	"LDDP/static/bindata"
 	"LDDP/utils/logger"
-	"html/template"
-	"strings"
-	"time"
 
 	assetfs "github.com/elazarl/go-bindata-assetfs"
 	"github.com/gin-gonic/gin"
@@ -31,7 +32,7 @@ func Setup() *gin.Engine {
 		}
 
 		// 检查授权
-		//r.Use(middlewares.LicenseCheck())
+		// r.Use(middlewares.LicenseCheck())
 	}
 
 	// 前端静态文件
@@ -91,7 +92,7 @@ func Setup() *gin.Engine {
 				// 信息获取
 				user.GET("user/data", controllers.GetUserOneData)
 				// 充值点券
-				user.POST("user/recharge/tickets", middlewares.RateLimitMiddleware(time.Second, 100, 100), middlewares.VersionEmpower(), controllers.UserRechargeTickets)
+				user.POST("user/recharge/tickets", middlewares.RateLimitMiddleware(time.Second, 100, 100), controllers.UserRechargeTickets)
 				// 获取配置文件
 				user.GET("get/setting", controllers.GetSetting)
 				// 退出登录
@@ -162,13 +163,13 @@ func Setup() *gin.Engine {
 				// 分页查询
 				admin.GET("tickets/division/data", controllers.TicketsDivisionData)
 				// 搜索
-				admin.GET("tickets/search", middlewares.VersionEmpower(), controllers.TicketsSearch)
+				admin.GET("tickets/search", controllers.TicketsSearch)
 				// 新增
-				admin.POST("tickets/add", middlewares.VersionEmpower(), controllers.TicketsAdd)
+				admin.POST("tickets/add", controllers.TicketsAdd)
 				// 下载卡密文件
-				admin.GET("tickets/data/download", middlewares.VersionEmpower(), controllers.TicketsDataDownload)
+				admin.GET("tickets/data/download", controllers.TicketsDataDownload)
 				// 删除
-				admin.DELETE("tickets/delete", middlewares.VersionEmpower(), controllers.TicketsDelete)
+				admin.DELETE("tickets/delete", controllers.TicketsDelete)
 			}
 
 			// 项目
@@ -192,15 +193,15 @@ func Setup() *gin.Engine {
 				// 分页查询
 				admin.GET("order/forward/division/data", controllers.OrderForwardDivisionData)
 				// 搜索
-				admin.GET("order/forward/search", middlewares.VersionEmpower(), controllers.OrderForwardSearch)
+				admin.GET("order/forward/search", controllers.OrderForwardSearch)
 				// 添加
-				admin.POST("order/forward/add", middlewares.VersionEmpower(), controllers.OrderForwardAdd)
+				admin.POST("order/forward/add", controllers.OrderForwardAdd)
 				// 修改
-				admin.PUT("order/forward/update", middlewares.VersionEmpower(), controllers.OrderForwardUpdate)
+				admin.PUT("order/forward/update", controllers.OrderForwardUpdate)
 				// 删除
-				admin.DELETE("order/forward/delete", middlewares.VersionEmpower(), controllers.OrderForwardDelete)
+				admin.DELETE("order/forward/delete", controllers.OrderForwardDelete)
 				// API测试
-				admin.POST("order/forward/api/test", middlewares.VersionEmpower(), controllers.OrderForwardApiTest)
+				admin.POST("order/forward/api/test", controllers.OrderForwardApiTest)
 			}
 
 			// 订单

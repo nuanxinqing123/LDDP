@@ -1,15 +1,16 @@
 package dao
 
 import (
-	"LDDP/server/model"
 	"log"
 	"math/rand"
 	"os"
 	"time"
 
+	"LDDP/server/model"
+
+	"github.com/glebarez/sqlite"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
-	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 )
